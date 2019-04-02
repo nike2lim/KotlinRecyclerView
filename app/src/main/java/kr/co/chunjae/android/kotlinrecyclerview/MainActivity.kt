@@ -6,13 +6,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var mData : List<DataVO>
+    lateinit var mData : ArrayList<DataVO>
     lateinit var mRecyclerView : RecyclerView
     lateinit var mAdapter : TestAdapter
     val mContext : Context = this
@@ -36,10 +37,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val swipeCallback = object : SwipeCallback(this) {
+            override fun onSwiped(p0: RecyclerView.ViewHolder, position: Int) {
+                mAdapter.deleteItem(position)
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(mRecyclerView)
     }
 
     fun addDummyListData() {
-        mData = listOf(
+        mData = mutableListOf<DataVO>(
             DataVO(R.drawable.menu1, "메뉴1"),
             DataVO(R.drawable.menu2, "메뉴2"),
             DataVO(R.drawable.menu3, "메뉴3"),
@@ -47,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             DataVO(R.drawable.menu5, "메뉴5"),
             DataVO(R.drawable.menu6, "메뉴6"),
             DataVO(R.drawable.menu7, "메뉴7")
-        )
+        ) as ArrayList<DataVO>
 
 
     }

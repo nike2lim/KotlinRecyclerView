@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-class TestAdapter(val context : Context, val items : List<DataVO>) : RecyclerView.Adapter<TestAdapter.ViewHolder>() {
+class TestAdapter(val context : Context, var items : ArrayList<DataVO>) : RecyclerView.Adapter<TestAdapter.ViewHolder>() {
 
     interface itemClick {
         fun onItemClick(v : View, position : Int)
@@ -23,6 +23,11 @@ class TestAdapter(val context : Context, val items : List<DataVO>) : RecyclerVie
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun deleteItem(pos : Int) {
+        items.removeAt(pos)
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
