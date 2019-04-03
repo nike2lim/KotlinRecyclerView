@@ -10,6 +10,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +38,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val swipeCallback = object : SwipeCallback(this) {
+        val itemMoveListener = object : SwipeCallback.onItemMoveListener {
+            override fun onItemMove(fromPosition: Int, toPosition: Int) {
+                Collections.swap(mAdapter.items, fromPosition, toPosition)
+                mAdapter.notifyItemMoved(fromPosition, toPosition)
+            }
+        }
+
+        val swipeCallback = object : SwipeCallback(this, itemMoveListener) {
             override fun onSwiped(p0: RecyclerView.ViewHolder, position: Int) {
                 mAdapter.deleteItem(position)
             }

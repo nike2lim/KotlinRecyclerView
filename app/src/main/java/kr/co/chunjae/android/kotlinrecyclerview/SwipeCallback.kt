@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.support.v7.widget.helper.ItemTouchHelper.LEFT
 
-abstract class SwipeCallback(val mContext : Context) : ItemTouchHelper.Callback() {
+abstract class SwipeCallback(val mContext : Context, val mItemMoveListener : onItemMoveListener) : ItemTouchHelper.Callback() {
 
     var mBackground : ColorDrawable
     var mDeleteDrawable : Drawable
@@ -28,8 +28,13 @@ abstract class SwipeCallback(val mContext : Context) : ItemTouchHelper.Callback(
         intrinsicHeight = mDeleteDrawable?.getIntrinsicHeight()
     }
 
+    interface onItemMoveListener {
+        fun onItemMove(fromPosition : Int, toPosition : Int)
+    }
+
     override fun onMove(recyclerView : RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-        return false
+        mItemMoveListener.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+        return true
     }
 
     override fun onChildDraw(
@@ -83,7 +88,7 @@ abstract class SwipeCallback(val mContext : Context) : ItemTouchHelper.Callback(
 
 
     override fun getMovementFlags(p0: RecyclerView, p1: RecyclerView.ViewHolder): Int {
-        return makeMovementFlags(0, LEFT or ItemTouchHelper.RIGHT)
+        return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
     }
 
     /**
